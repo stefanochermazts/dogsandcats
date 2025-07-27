@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Backend - DogsAndCats</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug Backend Connection</h1>
+    
+    <div class="debug-section">
+        <h2>1. Test Backend Availability</h2>
+        <button onclick="testBackendAvailability()">Test Backend</button>
+        <div id="backend-availability"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>2. Test Login API</h2>
+        <button onclick="testLoginAPI()">Test Login API</button>
+        <div id="login-api-test"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>3. Current Login Flow</h2>
+        <button onclick="testCurrentLogin()">Test Current Login</button>
+        <div id="current-login-test"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>4. Token Analysis</h2>
+        <button onclick="analyzeTokens()">Analyze Tokens</button>
+        <div id="token-analysis"></div>
+    </div>
+
+    <script>
+        async function testBackendAvailability() {
+            const result = document.getElementById('backend-availability');
+            result.innerHTML = '<p class="info">Testing backend availability...</p>';
+            
+            try {
+                const startTime = Date.now();
+                const response = await fetch('http://localhost:8001/api/test', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    result.innerHTML = `
+                        <p class="success">✅ Backend is available!</p>
+                        <p><strong>Response Time:</strong> ${responseTime}ms</p>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Backend responded with error</p>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Response Time:</strong> ${responseTime}ms</p>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Backend connection failed</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p><strong>Type:</strong> ${error.name}</p>
+                    <p class="warning">This will cause fallback to demo mode</p>
+                `;
+            }
+        }
+        
+        async function testLoginAPI() {
+            const result = document.getElementById('login-api-test');
+            result.innerHTML = '<p class="info">Testing login API...</p>';
+            
+            try {
+                const loginData = {
+                    email: 'admin@dogsandcats.com',
+                    password: 'admin123'
+                };
+                
+                const startTime = Date.now();
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Login API successful!</p>
+                        <p><strong>Response Time:</strong> ${responseTime}ms</p>
+                        <p><strong>Token:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Login API failed</p>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Response Time:</strong> ${responseTime}ms</p>
+                        <p><strong>Message:</strong> ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Login API error</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p><strong>Type:</strong> ${error.name}</p>
+                    <p class="warning">This will cause fallback to demo mode</p>
+                `;
+            }
+        }
+        
+        async function testCurrentLogin() {
+            const result = document.getElementById('current-login-test');
+            result.innerHTML = '<p class="info">Testing current login flow...</p>';
+            
+            try {
+                // Simula il login usando la stessa logica del sito
+                const loginData = {
+                    email: 'admin@dogsandcats.com',
+                    password: 'admin123'
+                };
+                
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Salva i dati come farebbe il sito
+                    localStorage.setItem('authToken', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    localStorage.setItem('isDemoToken', 'false');
+                    
+                    result.innerHTML = `
+                        <p class="success">✅ Current login flow successful!</p>
+                        <p><strong>Token Type:</strong> Real (not demo)</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <p><strong>Redirect URL:</strong> /admin/dashboard-complete.html</p>
+                        <p><a href="/admin/dashboard-complete.html" target="_blank">Open Dashboard Complete</a></p>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Current login flow failed</p>
+                        <p><strong>Message:</strong> ${data.message}</p>
+                        <p class="warning">This will cause fallback to demo mode</p>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Current login flow error</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p class="warning">This will cause fallback to demo mode</p>
+                `;
+            }
+        }
+        
+        function analyzeTokens() {
+            const result = document.getElementById('token-analysis');
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            const isDemo = localStorage.getItem('isDemoToken');
+            
+            let analysis = '<h3>Token Analysis:</h3>';
+            
+            if (token) {
+                const isDemoToken = token.startsWith('demo_token_');
+                analysis += `
+                    <p><strong>Token Found:</strong> Yes</p>
+                    <p><strong>Token Type:</strong> ${isDemoToken ? 'Demo' : 'Real'}</p>
+                    <p><strong>Is Demo Flag:</strong> ${isDemo}</p>
+                    <p><strong>Token Preview:</strong> ${token.substring(0, 30)}...</p>
+                `;
+            } else {
+                analysis += '<p><strong>Token Found:</strong> No</p>';
+            }
+            
+            if (user) {
+                const userData = JSON.parse(user);
+                analysis += `
+                    <p><strong>User Data:</strong></p>
+                    <pre>${JSON.stringify(userData, null, 2)}</pre>
+                `;
+            } else {
+                analysis += '<p><strong>User Data:</strong> Not found</p>';
+            }
+            
+            analysis += `
+                <button onclick="clearAllTokens()">Clear All Tokens</button>
+                <button onclick="testBackendAvailability()">Test Backend Again</button>
+            `;
+            
+            result.innerHTML = analysis;
+        }
+        
+        function clearAllTokens() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('isDemoToken');
+            localStorage.removeItem('authExpiration');
+            document.getElementById('token-analysis').innerHTML = '<p class="success">✅ All tokens cleared!</p>';
+        }
+        
+        // Auto-test on load
+        window.onload = function() {
+            testBackendAvailability();
+        };
+    </script>
+</body>
+</html> 

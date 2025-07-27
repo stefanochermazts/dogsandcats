@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Backend Connection</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test Backend Connection</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Basic Connection</h2>
+        <button onclick="testBasicConnection()">Test Basic</button>
+        <div id="basic-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test Login with Real Credentials</h2>
+        <button onclick="testRealLogin()">Test Real Login</button>
+        <div id="real-login-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test Current Site Login Flow</h2>
+        <button onclick="testSiteLoginFlow()">Test Site Login</button>
+        <div id="site-login-test"></div>
+    </div>
+
+    <script>
+        async function testBasicConnection() {
+            const result = document.getElementById('basic-test');
+            result.innerHTML = '<p class="info">Testing basic connection...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/test');
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <p class="success">✅ Backend is reachable!</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Backend not reachable: ${error.message}</p>
+                    <p>This explains why login uses demo fallback</p>
+                `;
+            }
+        }
+        
+        async function testRealLogin() {
+            const result = document.getElementById('real-login-test');
+            result.innerHTML = '<p class="info">Testing real login...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@dogsandcats.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Real login works!</p>
+                        <p><strong>Token:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <p><strong>Should redirect to:</strong> /admin/dashboard-complete.html</p>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Real login failed: ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Real login error: ${error.message}</p>
+                    <p>This will cause fallback to demo</p>
+                `;
+            }
+        }
+        
+        async function testSiteLoginFlow() {
+            const result = document.getElementById('site-login-test');
+            result.innerHTML = '<p class="info">Testing site login flow...</p>';
+            
+            try {
+                // Simula esattamente quello che fa il sito
+                const loginAPI = new (await import('./js/auth/login-api.js')).default();
+                
+                const loginResult = await loginAPI.login({
+                    email: 'admin@dogsandcats.com',
+                    password: 'admin123'
+                });
+                
+                if (loginResult.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Site login flow works!</p>
+                        <p><strong>Token:</strong> ${loginResult.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${loginResult.user.firstName} ${loginResult.user.lastName}</p>
+                        <p><strong>Type:</strong> ${loginResult.user.type || loginResult.user.userType}</p>
+                        <p><strong>Is Demo:</strong> ${loginResult.token.startsWith('demo_token_') ? 'Yes' : 'No'}</p>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Site login flow failed: ${loginResult.message}</p>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Site login flow error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

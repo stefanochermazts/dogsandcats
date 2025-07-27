@@ -1,0 +1,26 @@
+# Cursor Rules per DogsAndCats
+
+## Documentazione del Progetto
+Prima di rispondere a qualsiasi domanda o eseguire qualsiasi comando, leggi sempre la documentazione del progetto:
+
+1. **docs/README.md** - Overview generale del progetto
+2. **docs/analysis/analisi-funzionale.md** - Per domande sui requisiti e funzionalità
+3. **docs/framework/framework-sviluppo.md** - Per domande tecniche e setup
+4. **docs/user-stories/user-stories.md** - Per domande su features e user stories
+
+## Regole di Sviluppo
+- Il server di sviluppo gira sulla porta 8001 (non 8000)
+- Il database è MySQL configurato in Laragon (non SQLite)
+- Usa sempre le convenzioni e stack tecnologici definiti nella documentazione
+- Aggiorna la documentazione quando fai modifiche significative al codice
+
+## Struttura del Progetto
+- Mantieni la struttura delle directory come definita in docs/framework/framework-sviluppo.md
+- Segui le naming conventions documentate
+- Usa i template per user stories quando aggiungi nuove features
+
+## Priorità
+1. Leggi sempre la documentazione esistente prima di rispondere
+2. Riferisciti ai documenti specifici quando appropriato
+3. Aggiorna la documentazione quando necessario
+4. Mantieni la coerenza con le scelte architetturali documentate 

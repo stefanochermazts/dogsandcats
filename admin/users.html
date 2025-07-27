@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestione Utenti - DogsAndCats Admin">
+    <title>Gestione Utenti - DogsAndCats Admin</title>
+    
+    <!-- Preconnect per performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Font Inter per accessibilità -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components/button.css">
+    <link rel="stylesheet" href="../css/components/card.css">
+    <link rel="stylesheet" href="../css/components/form.css">
+    <link rel="stylesheet" href="../css/utilities.css">
+    <link rel="stylesheet" href="../css/components/lang-selector.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/users.css">
+</head>
+<body class="admin-body">
+    <!-- Skip link per accessibilità -->
+    <a href="#main-content" class="skip-link">Salta al contenuto principale</a>
+    
+    <!-- Admin Header -->
+    <header class="admin-header" role="banner">
+        <div class="admin-header__content">
+            <!-- Logo e Brand -->
+            <div class="admin-header__brand">
+                <a href="../index.html" class="admin-header__logo" aria-label="DogsAndCats - Home">
+                    <div class="admin-header__logo-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4.5 9.5L9 5l4.5 4.5L9 14l-4.5-4.5z"/>
+                        </svg>
+                    </div>
+                    <span class="admin-header__logo-text">DogsAndCats</span>
+                </a>
+                <span class="admin-header__badge">Admin</span>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="admin-header__nav" role="navigation">
+                <ul class="admin-nav">
+                    <li><a href="dashboard-complete.html" class="admin-nav__link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <rect x="9" y="9" width="6" height="6"/>
+                            <path d="M9 3v6M15 3v6M3 9h6M3 15h6"/>
+                        </svg>
+                        <span data-i18n="admin.nav.dashboard">Dashboard</span>
+                    </a></li>
+                    <li><a href="users.html" class="admin-nav__link admin-nav__link--active" aria-current="page">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span data-i18n="admin.nav.users">Gestione Utenti</span>
+                    </a></li>
+                </ul>
+            </nav>
+            
+            <!-- Header Actions -->
+            <div class="admin-header__actions">
+                <!-- Language Selector -->
+                <div class="lang-selector" data-js="language-selector">
+                    <button class="lang-selector__toggle" data-js="lang-toggle" aria-expanded="false">
+                        <span class="lang-selector__current" data-js="current-lang">
+                            🇮🇹 <span class="lang-selector__text">Italiano</span>
+                        </span>
+                        <svg class="lang-selector__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                    <div class="lang-selector__dropdown" data-js="language-options">
+                        <!-- Le opzioni verranno popolate dinamicamente -->
+                    </div>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <button class="admin-header__theme-toggle" aria-label="Cambia tema" data-js="theme-toggle">
+                    <svg class="admin-header__theme-icon admin-header__theme-icon--sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <svg class="admin-header__theme-icon admin-header__theme-icon--moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                
+                <!-- User Menu -->
+                <div class="admin-header__user">
+                    <button class="admin-header__user-toggle" data-js="admin-user-toggle" aria-expanded="false">
+                        <div class="admin-header__user-avatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <span class="admin-header__user-name" data-js="admin-user-name">Admin</span>
+                        <svg class="admin-header__user-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                    <div class="admin-header__user-dropdown" data-js="admin-user-dropdown">
+                        <a href="../index.html" class="admin-header__user-link">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9,22 9,12 15,12 15,22"/>
+                            </svg>
+                            Vai al Sito
+                        </a>
+                        <a href="../pages/auth/login.html" class="admin-header__user-link admin-header__user-link--logout" data-js="admin-logout">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h4"/>
+                                <polyline points="16,17 21,12 16,7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Esci
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="admin-main" role="main">
+        <div class="admin-container">
+            <!-- Page Header -->
+            <div class="admin-page-header">
+                <div class="admin-page-header__content">
+                    <h1 class="admin-page-header__title" data-i18n="admin.users.title">Gestione Utenti</h1>
+                    <p class="admin-page-header__subtitle" data-i18n="admin.users.subtitle">
+                        Visualizza e gestisci tutti gli utenti registrati sulla piattaforma
+                    </p>
+                </div>
+                <div class="admin-page-header__actions">
+                    <button class="btn btn--outline btn--sm" data-js="export-users" data-i18n="admin.users.export">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Esporta
+                    </button>
+                    <button class="btn btn--primary btn--sm" data-js="refresh-users" data-i18n="admin.users.refresh">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23,4 23,10 17,10"/>
+                            <polyline points="1,20 1,14 7,14"/>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                        </svg>
+                        Aggiorna
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filters & Search -->
+            <div class="users-filters">
+                <div class="users-filters__search">
+                    <div class="search-field">
+                        <svg class="search-field__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input type="text" 
+                               class="search-field__input" 
+                               placeholder="Cerca per nome, email o organizzazione..." 
+                               data-js="search-input">
+                        <button class="search-field__clear" data-js="search-clear" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="users-filters__options">
+                    <select class="filter-select" data-js="filter-user-type">
+                        <option value="">Tutti i tipi</option>
+                        <option value="proprietario">Proprietario</option>
+                        <option value="associazione">Associazione</option>
+                        <option value="volontario">Volontario</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    
+                    <select class="filter-select" data-js="filter-status">
+                        <option value="">Tutti gli stati</option>
+                        <option value="active">Attivi</option>
+                        <option value="inactive">Non attivi</option>
+                    </select>
+                    
+                    <select class="filter-select" data-js="filter-verified">
+                        <option value="">Verifica email</option>
+                        <option value="verified">Verificati</option>
+                        <option value="unverified">Non verificati</option>
+                    </select>
+                    
+                    <button class="btn btn--outline btn--sm" data-js="clear-filters">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                        Pulisci filtri
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Users Table -->
+            <div class="users-table-container">
+                <!-- Loading State -->
+                <div class="admin-loading" id="usersLoading">
+                    <div class="admin-loading__spinner"></div>
+                    <p>Caricamento utenti...</p>
+                </div>
+                
+                <!-- Table -->
+                <div class="users-table-wrapper" id="usersTable" style="display: none;">
+                    <table class="users-table" role="table">
+                        <thead>
+                            <tr role="row">
+                                <th class="users-table__header users-table__header--sortable" data-js="sort" data-sort="id">
+                                    <span>ID</span>
+                                    <svg class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"/>
+                                    </svg>
+                                </th>
+                                <th class="users-table__header users-table__header--sortable" data-js="sort" data-sort="first_name">
+                                    <span>Nome</span>
+                                    <svg class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"/>
+                                    </svg>
+                                </th>
+                                <th class="users-table__header users-table__header--sortable" data-js="sort" data-sort="email">
+                                    <span>Email</span>
+                                    <svg class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"/>
+                                    </svg>
+                                </th>
+                                <th class="users-table__header users-table__header--sortable" data-js="sort" data-sort="user_type">
+                                    <span>Tipo</span>
+                                    <svg class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"/>
+                                    </svg>
+                                </th>
+                                <th class="users-table__header">Stato</th>
+                                <th class="users-table__header users-table__header--sortable" data-js="sort" data-sort="created_at">
+                                    <span>Registrato</span>
+                                    <svg class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"/>
+                                    </svg>
+                                </th>
+                                <th class="users-table__header users-table__header--sortable" data-js="sort" data-sort="last_login_at">
+                                    <span>Ultimo accesso</span>
+                                    <svg class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 12,15 18,9"/>
+                                    </svg>
+                                </th>
+                                <th class="users-table__header">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody data-js="users-table-body">
+                            <!-- I dati verranno caricati dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="users-empty" id="usersEmpty" style="display: none;">
+                    <div class="users-empty__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="users-empty__title">Nessun utente trovato</h3>
+                    <p class="users-empty__message">Non ci sono utenti che corrispondono ai criteri di ricerca.</p>
+                    <button class="btn btn--outline" data-js="clear-filters">Pulisci filtri</button>
+                </div>
+                
+                <!-- Error State -->
+                <div class="admin-error" id="usersError" style="display: none;">
+                    <div class="admin-error__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                    </div>
+                    <h3 class="admin-error__title">Errore nel caricamento</h3>
+                    <p class="admin-error__message" data-js="users-error-message">Impossibile caricare gli utenti.</p>
+                    <button class="btn btn--primary" data-js="retry-users">Riprova</button>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="users-pagination" id="usersPagination" style="display: none;">
+                <div class="pagination-info">
+                    <span data-js="pagination-info">Visualizzati 0-0 di 0 utenti</span>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn btn--outline btn--sm" data-js="pagination-prev" disabled>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15,18 9,12 15,6"/>
+                        </svg>
+                        Precedente
+                    </button>
+                    <div class="pagination-pages" data-js="pagination-pages">
+                        <!-- Le pagine verranno generate dinamicamente -->
+                    </div>
+                    <button class="btn btn--outline btn--sm" data-js="pagination-next" disabled>
+                        Successivo
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- User Detail Modal -->
+    <div class="modal" id="userDetailModal" style="display: none;">
+        <div class="modal__backdrop" data-js="modal-backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3 class="modal__title" data-js="modal-user-name">Dettagli Utente</h3>
+                <button class="modal__close" data-js="modal-close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal__body" data-js="modal-user-details">
+                <!-- I dettagli verranno caricati dinamicamente -->
+            </div>
+            <div class="modal__footer">
+                <button class="btn btn--outline" data-js="modal-close">Chiudi</button>
+                <button class="btn btn--primary" data-js="edit-user">Modifica</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Confirm Delete Modal -->
+    <div class="modal" id="confirmDeleteModal" style="display: none;">
+        <div class="modal__backdrop" data-js="delete-modal-backdrop"></div>
+        <div class="modal__content modal__content--small">
+            <div class="modal__header">
+                <h3 class="modal__title">Conferma Eliminazione</h3>
+                <button class="modal__close" data-js="delete-modal-close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal__body">
+                <p>Sei sicuro di voler eliminare l'utente <strong data-js="delete-user-name"></strong>?</p>
+                <p class="text-error">Questa azione non può essere annullata.</p>
+            </div>
+            <div class="modal__footer">
+                <button class="btn btn--outline" data-js="delete-modal-close">Annulla</button>
+                <button class="btn btn--danger" data-js="confirm-delete">Elimina</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="../js/i18n.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-common.js"></script>
+    <script src="js/users.js"></script>
+</body>
+</html> 

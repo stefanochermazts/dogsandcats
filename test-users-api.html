@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Users API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .success { color: green; }
+        .error { color: red; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test Users API</h1>
+    
+    <div class="test-section">
+        <h2>Test Lista Utenti</h2>
+        <button onclick="testListUsers()">Test Lista Utenti</button>
+        <div id="listResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Dettagli Utente</h2>
+        <input type="number" id="userId" placeholder="ID Utente" value="1">
+        <button onclick="testUserDetails()">Test Dettagli Utente</button>
+        <div id="detailsResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Toggle Status</h2>
+        <input type="number" id="toggleUserId" placeholder="ID Utente" value="2">
+        <button onclick="testToggleStatus()">Test Toggle Status</button>
+        <div id="toggleResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Verifica Email</h2>
+        <input type="number" id="verifyUserId" placeholder="ID Utente" value="3">
+        <button onclick="testVerifyEmail()">Test Verifica Email</button>
+        <div id="verifyResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Elimina Utente</h2>
+        <input type="number" id="deleteUserId" placeholder="ID Utente" value="4">
+        <button onclick="testDeleteUser()">Test Elimina Utente</button>
+        <div id="deleteResult" class="result"></div>
+    </div>
+
+    <script>
+        // Simula il token di autenticazione
+        const token = 'demo_token_admin_123';
+        
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(`http://localhost:8001/api${url}`, {
+                    ...options,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                
+                const data = await response.json();
+                return { success: response.ok, data, status: response.status };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+        
+        async function testListUsers() {
+            const result = document.getElementById('listResult');
+            result.innerHTML = 'Caricamento...';
+            
+            const response = await makeRequest('/admin/users');
+            
+            if (response.success) {
+                result.innerHTML = `<div class="success">✅ Successo! Utenti caricati: ${response.data.data.users.length}</div>
+                    <pre>${JSON.stringify(response.data, null, 2)}</pre>`;
+            } else {
+                result.innerHTML = `<div class="error">❌ Errore: ${response.error || response.data?.message}</div>`;
+            }
+        }
+        
+        async function testUserDetails() {
+            const userId = document.getElementById('userId').value;
+            const result = document.getElementById('detailsResult');
+            result.innerHTML = 'Caricamento...';
+            
+            const response = await makeRequest(`/admin/users/${userId}`);
+            
+            if (response.success) {
+                result.innerHTML = `<div class="success">✅ Successo! Dettagli utente caricati</div>
+                    <pre>${JSON.stringify(response.data, null, 2)}</pre>`;
+            } else {
+                result.innerHTML = `<div class="error">❌ Errore: ${response.error || response.data?.message}</div>`;
+            }
+        }
+        
+        async function testToggleStatus() {
+            const userId = document.getElementById('toggleUserId').value;
+            const result = document.getElementById('toggleResult');
+            result.innerHTML = 'Caricamento...';
+            
+            const response = await makeRequest(`/admin/users/${userId}/toggle-active`, {
+                method: 'POST'
+            });
+            
+            if (response.success) {
+                result.innerHTML = `<div class="success">✅ Successo! ${response.data.message}</div>
+                    <pre>${JSON.stringify(response.data, null, 2)}</pre>`;
+            } else {
+                result.innerHTML = `<div class="error">❌ Errore: ${response.error || response.data?.message}</div>`;
+            }
+        }
+        
+        async function testVerifyEmail() {
+            const userId = document.getElementById('verifyUserId').value;
+            const result = document.getElementById('verifyResult');
+            result.innerHTML = 'Caricamento...';
+            
+            const response = await makeRequest(`/admin/users/${userId}/verify-email`, {
+                method: 'POST'
+            });
+            
+            if (response.success) {
+                result.innerHTML = `<div class="success">✅ Successo! ${response.data.message}</div>
+                    <pre>${JSON.stringify(response.data, null, 2)}</pre>`;
+            } else {
+                result.innerHTML = `<div class="error">❌ Errore: ${response.error || response.data?.message}</div>`;
+            }
+        }
+        
+        async function testDeleteUser() {
+            const userId = document.getElementById('deleteUserId').value;
+            const result = document.getElementById('deleteResult');
+            result.innerHTML = 'Caricamento...';
+            
+            const response = await makeRequest(`/admin/users/${userId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.success) {
+                result.innerHTML = `<div class="success">✅ Successo! ${response.data.message}</div>
+                    <pre>${JSON.stringify(response.data, null, 2)}</pre>`;
+            } else {
+                result.innerHTML = `<div class="error">❌ Errore: ${response.error || response.data?.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard Admin - DogsAndCats Admin">
+    <title>Dashboard Admin - DogsAndCats Admin</title>
+    
+    <!-- Preconnect per performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Font Inter per accessibilità -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components/button.css">
+    <link rel="stylesheet" href="../css/components/card.css">
+    <link rel="stylesheet" href="../css/components/form.css">
+    <link rel="stylesheet" href="../css/utilities.css">
+    <link rel="stylesheet" href="../css/components/lang-selector.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="admin-body">
+    <!-- Skip link per accessibilità -->
+    <a href="#main-content" class="skip-link">Salta al contenuto principale</a>
+    
+    <!-- Admin Header -->
+    <header class="admin-header" role="banner">
+        <div class="admin-header__content">
+            <!-- Logo e Brand -->
+            <div class="admin-header__brand">
+                <a href="../index.html" class="admin-header__logo" aria-label="DogsAndCats - Home">
+                    <div class="admin-header__logo-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4.5 9.5L9 5l4.5 4.5L9 14l-4.5-4.5z"/>
+                        </svg>
+                    </div>
+                    <span class="admin-header__logo-text">DogsAndCats</span>
+                </a>
+                <span class="admin-header__badge">Admin</span>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="admin-header__nav" role="navigation">
+                <ul class="admin-nav">
+                    <li><a href="dashboard-complete.html" class="admin-nav__link admin-nav__link--active" aria-current="page">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <rect x="9" y="9" width="6" height="6"/>
+                            <path d="M9 3v6M15 3v6M3 9h6M3 15h6"/>
+                        </svg>
+                        <span data-i18n="admin.nav.dashboard">Dashboard</span>
+                    </a></li>
+                    <li><a href="users.html" class="admin-nav__link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span data-i18n="admin.nav.users">Gestione Utenti</span>
+                    </a></li>
+                </ul>
+            </nav>
+            
+            <!-- Header Actions -->
+            <div class="admin-header__actions">
+                <!-- Language Selector -->
+                <div class="lang-selector" data-js="language-selector">
+                    <button class="lang-selector__toggle" data-js="lang-toggle" aria-expanded="false">
+                        <span class="lang-selector__current" data-js="current-lang">
+                            🇮🇹 <span class="lang-selector__text">Italiano</span>
+                        </span>
+                        <svg class="lang-selector__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                    <div class="lang-selector__dropdown" data-js="language-options">
+                        <!-- Le opzioni verranno popolate dinamicamente -->
+                    </div>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <button class="admin-header__theme-toggle" aria-label="Cambia tema" data-js="theme-toggle">
+                    <svg class="admin-header__theme-icon admin-header__theme-icon--sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <svg class="admin-header__theme-icon admin-header__theme-icon--moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                
+                <!-- User Menu -->
+                <div class="admin-header__user">
+                    <button class="admin-header__user-toggle" data-js="admin-user-toggle" aria-expanded="false">
+                        <div class="admin-header__user-avatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <span class="admin-header__user-name" data-js="admin-user-name">Admin</span>
+                        <svg class="admin-header__user-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                    <div class="admin-header__user-dropdown" data-js="admin-user-dropdown">
+                        <a href="../index.html" class="admin-header__user-link" data-i18n="admin.user.goToSite">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9,22 9,12 15,12 15,22"/>
+                            </svg>
+                            Vai al Sito
+                        </a>
+                        <a href="../pages/auth/login.html" class="admin-header__user-link admin-header__user-link--logout" data-js="admin-logout" data-i18n="admin.user.logout">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h4"/>
+                                <polyline points="16,17 21,12 16,7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Esci
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="admin-main" role="main">
+        <div class="admin-container">
+            <!-- Page Header -->
+            <div class="admin-page-header">
+                <div class="admin-page-header__content">
+                    <h1 class="admin-page-header__title" data-i18n="admin.dashboard.title">Dashboard Admin</h1>
+                    <p class="admin-page-header__subtitle" data-i18n="admin.dashboard.subtitle">
+                        Panoramica generale della piattaforma DogsAndCats
+                    </p>
+                </div>
+                <div class="admin-page-header__actions">
+                    <button class="btn btn--outline btn--sm" data-js="export-dashboard" data-i18n="admin.dashboard.export">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Esporta
+                    </button>
+                    <button class="btn btn--primary btn--sm" data-js="refresh-dashboard" data-i18n="admin.dashboard.refresh">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23,4 23,10 17,10"/>
+                            <polyline points="1,20 1,14 7,14"/>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                        </svg>
+                        Aggiorna
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-card__header">
+                        <div class="stat-card__icon stat-card__icon--users">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="stat-card__trend stat-card__trend--positive">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18,15 12,9 6,15"/>
+                            </svg>
+                            <span>+12%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__title" data-i18n="admin.dashboard.stats.totalUsers">Utenti Totali</h3>
+                        <div class="stat-card__value" id="totalUsers">Caricamento...</div>
+                        <p class="stat-card__description" data-i18n="admin.dashboard.stats.thisMonth">Questo mese</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card__header">
+                        <div class="stat-card__icon stat-card__icon--adoptions">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-card__trend stat-card__trend--positive">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18,15 12,9 6,15"/>
+                            </svg>
+                            <span>+8%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__title" data-i18n="admin.dashboard.stats.totalAdoptions">Adozioni</h3>
+                        <div class="stat-card__value" id="totalAdoptions">Caricamento...</div>
+                        <p class="stat-card__description" data-i18n="admin.dashboard.stats.thisMonth">Questo mese</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card__header">
+                        <div class="stat-card__icon stat-card__icon--volunteers">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <div class="stat-card__trend stat-card__trend--positive">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18,15 12,9 6,15"/>
+                            </svg>
+                            <span>+2%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__title" data-i18n="admin.dashboard.stats.totalVolunteers">Volontari</h3>
+                        <div class="stat-card__value" id="totalVolunteers">Caricamento...</div>
+                        <p class="stat-card__description" data-i18n="admin.dashboard.stats.thisMonth">Questo mese</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card__header">
+                        <div class="stat-card__icon stat-card__icon--associations">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9,22 9,12 15,12 15,22"/>
+                            </svg>
+                        </div>
+                        <div class="stat-card__trend stat-card__trend--positive">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18,15 12,9 6,15"/>
+                            </svg>
+                            <span>+3%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__title" data-i18n="admin.dashboard.stats.totalAssociations">Associazioni</h3>
+                        <div class="stat-card__value" id="totalAssociations">Caricamento...</div>
+                        <p class="stat-card__description" data-i18n="admin.dashboard.stats.thisMonth">Questo mese</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="dashboard-activity">
+                <div class="dashboard-activity__header">
+                    <h2 class="dashboard-activity__title" data-i18n="admin.dashboard.activity.title">Attività Recenti</h2>
+                    <button class="btn btn--outline btn--sm" data-js="view-all-activity" data-i18n="admin.dashboard.activity.viewAll">
+                        Visualizza Tutte
+                    </button>
+                </div>
+                <div class="dashboard-activity__content" id="recentActivity">
+                    <div class="activity-item">
+                        <div class="activity-item__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                        <div class="activity-item__content">
+                            <h4 class="activity-item__title" data-i18n="admin.dashboard.activity.loading">Caricamento...</h4>
+                            <p class="activity-item__description" data-i18n="admin.dashboard.activity.loading">Caricamento dati dal backend</p>
+                            <span class="activity-item__time">Ora</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../js/i18n.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-common.js"></script>
+    <script src="js/dashboard-complete.js"></script>
+    
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update user name
+            const userData = localStorage.getItem('user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    const userNameElement = document.querySelector('[data-js="admin-user-name"]');
+                    if (userNameElement) {
+                        userNameElement.textContent = `${user.firstName} ${user.lastName}`;
+                    }
+                } catch (error) {
+                    console.error('Error updating user name:', error);
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

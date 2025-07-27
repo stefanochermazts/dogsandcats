@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login - DogsAndCats</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug Login Flow</h1>
+    
+    <div class="debug-section">
+        <h2>1. Test Backend Direct</h2>
+        <button onclick="testBackendDirect()">Test Backend Direct</button>
+        <div id="backend-direct"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>2. Test Login Direct</h2>
+        <button onclick="testLoginDirect()">Test Login Direct</button>
+        <div id="login-direct"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>3. Test Login API Class</h2>
+        <button onclick="testLoginAPIClass()">Test Login API Class</button>
+        <div id="login-api-class"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>4. Test Site Login Flow</h2>
+        <button onclick="testSiteLoginFlow()">Test Site Login Flow</button>
+        <div id="site-login-flow"></div>
+    </div>
+
+    <script>
+        async function testBackendDirect() {
+            const result = document.getElementById('backend-direct');
+            result.innerHTML = '<p class="info">Testing backend direct...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/test');
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <p class="success">✅ Backend direct OK!</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Backend direct failed: ${error.message}</p>
+                    <p class="warning">This explains why login uses fallback</p>
+                `;
+            }
+        }
+        
+        async function testLoginDirect() {
+            const result = document.getElementById('login-direct');
+            result.innerHTML = '<p class="info">Testing login direct...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@dogsandcats.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Login direct OK!</p>
+                        <p><strong>Token:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Login direct failed: ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Login direct error: ${error.message}</p>
+                    <p class="warning">This will cause fallback to demo</p>
+                `;
+            }
+        }
+        
+        async function testLoginAPIClass() {
+            const result = document.getElementById('login-api-class');
+            result.innerHTML = '<p class="info">Testing login API class...</p>';
+            
+            try {
+                // Simula la classe LoginAPI
+                class LoginAPITest {
+                    constructor() {
+                        this.baseURL = 'http://localhost:8001/api';
+                    }
+                    
+                    async login(data) {
+                        try {
+                            console.log('🔧 LoginAPITest: Attempting login with Laravel backend...');
+                            
+                            const response = await fetch(`${this.baseURL}/auth/login`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                },
+                                body: JSON.stringify(data)
+                            });
+                            
+                            const result = await response.json();
+                            console.log('🔧 LoginAPITest: Backend response:', result);
+                            
+                            if (!response.ok) {
+                                return {
+                                    success: false,
+                                    error: 'api_error',
+                                    message: result.message || 'Errore del server'
+                                };
+                            }
+                            
+                            if (result.success) {
+                                console.log('🔧 LoginAPITest: Backend login successful');
+                                return {
+                                    success: true,
+                                    message: result.message,
+                                    user: {
+                                        id: result.data.user.id,
+                                        firstName: result.data.user.firstName,
+                                        lastName: result.data.user.lastName,
+                                        email: result.data.user.email,
+                                        type: result.data.user.userType,
+                                        userType: result.data.user.userType,
+                                        isActive: result.data.user.isActive,
+                                        emailVerified: result.data.user.emailVerified
+                                    },
+                                    token: result.data.token
+                                };
+                            }
+                            
+                            return {
+                                success: false,
+                                error: 'invalid_response',
+                                message: 'Risposta del server non valida'
+                            };
+                            
+                        } catch (error) {
+                            console.error('🔧 LoginAPITest: Login API error:', error);
+                            
+                            // Controlla se è un errore di rete
+                            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                                console.log('🔧 LoginAPITest: Network error detected, using fallback');
+                                return this.loginFallback(data);
+                            }
+                            
+                            return {
+                                success: false,
+                                error: 'network_error',
+                                message: 'Errore di connessione al server'
+                            };
+                        }
+                    }
+                    
+                    loginFallback(data) {
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                console.log('Using fallback login for:', data.email);
+                                
+                                const demoCredentials = {
+                                    'admin@dogsandcats.com': { type: 'admin', name: 'Admin DogsAndCats', password: 'admin123' }
+                                };
+                                
+                                const demoUser = demoCredentials[data.email];
+                                if (demoUser && data.password === demoUser.password) {
+                                    const nameParts = demoUser.name.split(' ');
+                                    
+                                    resolve({
+                                        success: true,
+                                        message: 'Login effettuato con successo (modalità demo)',
+                                        user: {
+                                            id: Math.floor(Math.random() * 1000),
+                                            firstName: nameParts[0],
+                                            lastName: nameParts[1] || '',
+                                            email: data.email,
+                                            type: demoUser.type,
+                                            userType: demoUser.type,
+                                            isActive: true,
+                                            emailVerified: true
+                                        },
+                                        token: 'demo_token_' + Date.now()
+                                    });
+                                } else {
+                                    resolve({
+                                        success: false,
+                                        error: 'invalid_credentials',
+                                        message: 'Email o password non corretti'
+                                    });
+                                }
+                            }, 1000);
+                        });
+                    }
+                }
+                
+                const loginAPI = new LoginAPITest();
+                const loginResult = await loginAPI.login({
+                    email: 'admin@dogsandcats.com',
+                    password: 'admin123'
+                });
+                
+                if (loginResult.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Login API class OK!</p>
+                        <p><strong>Token:</strong> ${loginResult.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${loginResult.user.firstName} ${loginResult.user.lastName}</p>
+                        <p><strong>Type:</strong> ${loginResult.user.type}</p>
+                        <p><strong>Is Demo:</strong> ${loginResult.token.startsWith('demo_token_') ? 'Yes' : 'No'}</p>
+                        <pre>${JSON.stringify(loginResult, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Login API class failed: ${loginResult.message}</p>
+                        <pre>${JSON.stringify(loginResult, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Login API class error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        async function testSiteLoginFlow() {
+            const result = document.getElementById('site-login-flow');
+            result.innerHTML = '<p class="info">Testing site login flow...</p>';
+            
+            try {
+                // Simula esattamente quello che fa il sito
+                const loginResult = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@dogsandcats.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await loginResult.json();
+                
+                if (loginResult.ok && data.success) {
+                    // Salva come farebbe il sito
+                    localStorage.setItem('authToken', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    localStorage.setItem('isDemoToken', 'false');
+                    
+                    result.innerHTML = `
+                        <p class="success">✅ Site login flow OK!</p>
+                        <p><strong>Token:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <p><strong>Is Demo:</strong> No</p>
+                        <p><strong>Redirect:</strong> /admin/dashboard-complete.html</p>
+                        <p><a href="/admin/dashboard-complete.html" target="_blank">Open Dashboard Complete</a></p>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Site login flow failed: ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Site login flow error: ${error.message}</p>
+                    <p class="warning">This will cause fallback to demo</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

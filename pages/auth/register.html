@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Registrati alla piattaforma DogsAndCats">
+    <meta name="title" content="Registrazione - DogsAndCats">
+    
+    <!-- Preconnect per performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Font Inter per accessibilità -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/variables.css">
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/components/header.css">
+    <link rel="stylesheet" href="../../css/components/button.css">
+    <link rel="stylesheet" href="../../css/components/card.css">
+    <link rel="stylesheet" href="../../css/components/form.css">
+    <link rel="stylesheet" href="../../css/utilities.css">
+    <link rel="stylesheet" href="../../css/components/footer.css">
+    <link rel="stylesheet" href="../../css/components/lang-selector.css">
+    <link rel="stylesheet" href="../../css/components/auth.css">
+    
+    <title data-i18n="auth.register.title">Registrazione - DogsAndCats</title>
+</head>
+<body>
+    <!-- Skip link per accessibilità -->
+    <a href="#main-content" class="skip-link" data-i18n="skip.content">Salta al contenuto principale</a>
+    
+    <!-- Header Semplificato -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header__content">
+                <!-- Logo -->
+                <a href="../../index.html" class="header__logo" aria-label="DogsAndCats - Home">
+                    <div class="header__logo-icon">
+                        <svg class="header__logo-paw" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4.5 9.5L9 5l4.5 4.5L9 14l-4.5-4.5z"/>
+                        </svg>
+                        <svg class="header__logo-heart" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <span class="header__logo-text">DogsAndCats</span>
+                </a>
+                
+                <!-- Header Actions -->
+                <div class="header__actions">
+                    <!-- Language Selector -->
+                    <div class="lang-selector" data-js="language-selector">
+                        <button class="lang-selector__toggle" data-js="lang-toggle" aria-expanded="false" data-i18n-attr="aria-label:lang.select">
+                            <span class="lang-selector__current" data-js="current-lang">
+                                🇮🇹 <span class="lang-selector__text">Italiano</span>
+                            </span>
+                            <svg class="lang-selector__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6,9 12,15 18,9"/>
+                            </svg>
+                        </button>
+                        <div class="lang-selector__dropdown" data-js="language-options">
+                            <!-- Le opzioni verranno popolate dinamicamente -->
+                        </div>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button class="header__theme-toggle" data-i18n-attr="aria-label:theme.toggle" data-js="theme-toggle">
+                        <svg class="header__theme-icon header__theme-icon--sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                        <svg class="header__theme-icon header__theme-icon--moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main auth-main" role="main">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <!-- Header del Form -->
+                    <div class="auth-card__header">
+                        <h1 class="auth-card__title" data-i18n="auth.register.title">Registrazione</h1>
+                        <p class="auth-card__subtitle" data-i18n="auth.register.subtitle">
+                            Crea il tuo account per accedere alla piattaforma dedicata a cani e gatti
+                        </p>
+                    </div>
+                    
+                    <!-- Form di Registrazione -->
+                    <form class="auth-form" id="registerForm" novalidate>
+                        <!-- Selezione Tipo Utente -->
+                        <div class="form__group">
+                            <label class="form__label form__label--required" data-i18n="auth.register.userType">Tipo di Utente</label>
+                            <div class="user-type-selector">
+                                <label class="user-type-option">
+                                    <input type="radio" name="userType" value="proprietario" class="user-type-radio" checked>
+                                    <div class="user-type-card">
+                                        <div class="user-type-icon">
+                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                            </svg>
+                                        </div>
+                                        <h3 class="user-type-title" data-i18n="auth.register.ownerTitle">Proprietario</h3>
+                                        <p class="user-type-description" data-i18n="auth.register.ownerDescription">
+                                            Gestisci il profilo del tuo cane o gatto
+                                        </p>
+                                    </div>
+                                </label>
+                                
+                                <label class="user-type-option">
+                                    <input type="radio" name="userType" value="associazione" class="user-type-radio">
+                                    <div class="user-type-card">
+                                        <div class="user-type-icon">
+                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                                <circle cx="9" cy="7" r="4"/>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                            </svg>
+                                        </div>
+                                        <h3 class="user-type-title" data-i18n="auth.register.associationTitle">Associazione</h3>
+                                        <p class="user-type-description" data-i18n="auth.register.associationDescription">
+                                            Gestisci adozioni e volontari
+                                        </p>
+                                    </div>
+                                </label>
+                                
+                                <label class="user-type-option">
+                                    <input type="radio" name="userType" value="volontario" class="user-type-radio">
+                                    <div class="user-type-card">
+                                        <div class="user-type-icon">
+                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                        </div>
+                                        <h3 class="user-type-title" data-i18n="auth.register.volunteerTitle">Volontario</h3>
+                                        <p class="user-type-description" data-i18n="auth.register.volunteerDescription">
+                                            Aiuta nelle attività di rifugio
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Dati Personali -->
+                        <div class="form__grid form__grid--2">
+                            <div class="form__group">
+                                <label for="firstName" class="form__label form__label--required" data-i18n="auth.register.firstName">Nome</label>
+                                <input type="text" id="firstName" name="firstName" class="form__input" required 
+                                       data-i18n-attr="placeholder:auth.register.firstNamePlaceholder">
+                                <div class="form__message form__message--error" id="firstNameError"></div>
+                            </div>
+                            
+                            <div class="form__group">
+                                <label for="lastName" class="form__label form__label--required" data-i18n="auth.register.lastName">Cognome</label>
+                                <input type="text" id="lastName" name="lastName" class="form__input" required 
+                                       data-i18n-attr="placeholder:auth.register.lastNamePlaceholder">
+                                <div class="form__message form__message--error" id="lastNameError"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="form__group">
+                            <label for="email" class="form__label form__label--required" data-i18n="auth.register.email">Email</label>
+                            <input type="email" id="email" name="email" class="form__input" required 
+                                   data-i18n-attr="placeholder:auth.register.emailPlaceholder">
+                            <div class="form__message form__message--error" id="emailError"></div>
+                        </div>
+                        
+                        <!-- Password -->
+                        <div class="form__grid form__grid--2">
+                            <div class="form__group">
+                                <label for="password" class="form__label form__label--required" data-i18n="auth.register.password">Password</label>
+                                <div class="password-field">
+                                    <input type="password" id="password" name="password" class="form__input" required 
+                                           minlength="8" data-i18n-attr="placeholder:auth.register.passwordPlaceholder">
+                                    <button type="button" class="password-toggle" aria-label="Mostra password" data-js="password-toggle">
+                                        <svg class="password-icon password-icon--show" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        <svg class="password-icon password-icon--hide" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                            <line x1="1" y1="1" x2="23" y2="23"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="form__message form__message--help" data-i18n="auth.register.passwordHelp">
+                                    Minimo 8 caratteri
+                                </div>
+                                <div class="form__message form__message--error" id="passwordError"></div>
+                            </div>
+                            
+                            <div class="form__group">
+                                <label for="confirmPassword" class="form__label form__label--required" data-i18n="auth.register.confirmPassword">Conferma Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form__input" required 
+                                       data-i18n-attr="placeholder:auth.register.confirmPasswordPlaceholder">
+                                <div class="form__message form__message--error" id="confirmPasswordError"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Campi Specifici per Associazione -->
+                        <div class="conditional-fields" id="associationFields" style="display: none;">
+                            <div class="form__group">
+                                <label for="organizationName" class="form__label form__label--required" data-i18n="auth.register.organizationName">Nome Organizzazione</label>
+                                <input type="text" id="organizationName" name="organizationName" class="form__input" 
+                                       data-i18n-attr="placeholder:auth.register.organizationNamePlaceholder">
+                                <div class="form__message form__message--error" id="organizationNameError"></div>
+                            </div>
+                            
+                            <div class="form__group">
+                                <label for="vatNumber" class="form__label" data-i18n="auth.register.vatNumber">Partita IVA / Codice Fiscale</label>
+                                <input type="text" id="vatNumber" name="vatNumber" class="form__input" 
+                                       data-i18n-attr="placeholder:auth.register.vatNumberPlaceholder">
+                            </div>
+                        </div>
+                        
+                        <!-- Telefono -->
+                        <div class="form__group">
+                            <label for="phone" class="form__label" data-i18n="auth.register.phone">Telefono</label>
+                            <input type="tel" id="phone" name="phone" class="form__input" 
+                                   data-i18n-attr="placeholder:auth.register.phonePlaceholder">
+                        </div>
+                        
+                        <!-- Consensi -->
+                        <div class="form__group">
+                            <div class="form__checkbox">
+                                <input type="checkbox" id="privacyConsent" name="privacyConsent" required>
+                                <label for="privacyConsent" class="form__checkbox-label">
+                                    <span data-i18n="auth.register.privacyConsent">Accetto la</span> 
+                                    <a href="../legal/privacy.html" class="text-primary" data-i18n="auth.register.privacyPolicy">Privacy Policy</a>
+                                </label>
+                            </div>
+                            <div class="form__message form__message--error" id="privacyConsentError"></div>
+                        </div>
+                        
+                        <div class="form__group">
+                            <div class="form__checkbox">
+                                <input type="checkbox" id="termsConsent" name="termsConsent" required>
+                                <label for="termsConsent" class="form__checkbox-label">
+                                    <span data-i18n="auth.register.termsConsent">Accetto i</span> 
+                                    <a href="../legal/terms.html" class="text-primary" data-i18n="auth.register.termsOfService">Termini di Servizio</a>
+                                </label>
+                            </div>
+                            <div class="form__message form__message--error" id="termsConsentError"></div>
+                        </div>
+                        
+                        <div class="form__group">
+                            <div class="form__checkbox">
+                                <input type="checkbox" id="marketingConsent" name="marketingConsent">
+                                <label for="marketingConsent" class="form__checkbox-label" data-i18n="auth.register.marketingConsent">
+                                    Accetto di ricevere comunicazioni promozionali (opzionale)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="form__actions">
+                            <button type="submit" class="btn btn--primary btn--full btn--lg" id="submitBtn" data-i18n="auth.register.submit">
+                                Registrati
+                            </button>
+                        </div>
+                        
+                        <!-- Loading State -->
+                        <div class="auth-loading" id="loadingState" style="display: none;">
+                            <div class="auth-loading__spinner"></div>
+                            <p data-i18n="auth.register.processing">Creazione account in corso...</p>
+                        </div>
+                        
+                        <!-- Success Message -->
+                        <div class="auth-success" id="successMessage" style="display: none;">
+                            <div class="auth-success__icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22,4 12,14.01 9,11.01"/>
+                                </svg>
+                            </div>
+                            <h3 data-i18n="auth.register.successTitle">Registrazione completata!</h3>
+                            <p data-i18n="auth.register.successMessage">
+                                Ti abbiamo inviato un'email di conferma. Clicca sul link per attivare il tuo account.
+                            </p>
+                        </div>
+                    </form>
+                    
+                    <!-- Link al Login -->
+                    <div class="auth-card__footer">
+                        <p class="auth-link-text">
+                            <span data-i18n="auth.register.hasAccount">Hai già un account?</span>
+                            <a href="login.html" class="auth-link" data-i18n="auth.register.loginLink">Accedi</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- JavaScript -->
+    <script src="../../js/i18n.js"></script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/auth/register.js"></script>
+</body>
+</html> 

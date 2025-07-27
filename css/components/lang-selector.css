@@ -1,0 +1,195 @@
+/* Language Selector Component */
+
+.lang-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.lang-selector__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-normal);
+  min-width: 120px;
+}
+
+.lang-selector__toggle:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color-hover);
+}
+
+.lang-selector__toggle:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.lang-selector__current {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex: 1;
+}
+
+.lang-selector__text {
+  white-space: nowrap;
+}
+
+.lang-selector__arrow {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--transition-normal);
+}
+
+.lang-selector--open .lang-selector__arrow {
+  transform: rotate(180deg);
+}
+
+.lang-selector__dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-1));
+  left: 0;
+  right: 0;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all var(--transition-normal);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.lang-selector--open .lang-selector__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.lang-selector__option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-3);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.lang-selector__option:hover {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.lang-selector__option:focus {
+  background-color: var(--primary-50);
+  color: var(--primary-color);
+  outline: none;
+}
+
+[data-theme="dark"] .lang-selector__option:focus {
+  background-color: var(--primary-900);
+}
+
+.lang-selector__option:first-child {
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.lang-selector__option:last-child {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .lang-selector__toggle {
+    min-width: 100px;
+    padding: var(--spacing-2);
+  }
+  
+  .lang-selector__text {
+    display: none;
+  }
+}
+
+/* Header specific styles */
+.header .lang-selector {
+  order: -1;
+}
+
+@media (min-width: 768px) {
+  .header .lang-selector {
+    order: 0;
+  }
+}
+
+/* Responsive positioning */
+@media (max-width: 767px) {
+  .lang-selector__dropdown {
+    right: auto;
+    left: auto;
+    min-width: 160px;
+  }
+}
+
+/* Focus management */
+.lang-selector__dropdown:focus-within {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Animation for smooth transitions */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.lang-selector--open .lang-selector__dropdown {
+  animation: dropdownFadeIn 0.2s ease-out;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .lang-selector__toggle {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .lang-selector__toggle:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color-hover);
+}
+
+[data-theme="dark"] .lang-selector__dropdown {
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .lang-selector__option:hover {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+} 

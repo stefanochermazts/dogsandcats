@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Users Buttons</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .success { color: green; }
+        .error { color: red; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 15px; margin: 5px; }
+        .table-actions { display: flex; gap: 5px; }
+        .table-action { padding: 8px; border: none; border-radius: 4px; cursor: pointer; }
+        .table-action--view { background: #007bff; color: white; }
+        .table-action--toggle { background: #28a745; color: white; }
+        .table-action--edit { background: #ffc107; color: black; }
+        .table-action--delete { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Test Users Buttons</h1>
+    
+    <div class="test-section">
+        <h2>Simulazione Tabella Utenti</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Tipo</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Admin User</td>
+                    <td>admin@dogsandcats.com</td>
+                    <td>Admin</td>
+                    <td>Attivo</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="table-action table-action--view" onclick="testViewUser(1)" title="Visualizza dettagli">
+                                👁️
+                            </button>
+                            <button class="table-action table-action--toggle" onclick="testToggleStatus(1)" title="Disattiva utente">
+                                🔄
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Marco Gialli</td>
+                    <td>marco.gialli@test.com</td>
+                    <td>Volontario</td>
+                    <td>Attivo</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="table-action table-action--view" onclick="testViewUser(2)" title="Visualizza dettagli">
+                                👁️
+                            </button>
+                            <button class="table-action table-action--toggle" onclick="testToggleStatus(2)" title="Disattiva utente">
+                                🔄
+                            </button>
+                            <button class="table-action table-action--edit" onclick="testVerifyEmail(2)" title="Verifica email">
+                                ✓
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Associazione Test</td>
+                    <td>associazione@test.com</td>
+                    <td>Associazione</td>
+                    <td>Non verificato</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="table-action table-action--view" onclick="testViewUser(3)" title="Visualizza dettagli">
+                                👁️
+                            </button>
+                            <button class="table-action table-action--toggle" onclick="testToggleStatus(3)" title="Disattiva utente">
+                                🔄
+                            </button>
+                            <button class="table-action table-action--edit" onclick="testVerifyEmail(3)" title="Verifica email">
+                                ✓
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="test-section">
+        <h2>Risultati Test</h2>
+        <div id="testResults" class="result"></div>
+    </div>
+
+    <script>
+        // Simula il token di autenticazione
+        const token = 'demo_token_admin_123';
+        
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(`http://localhost:8001/api${url}`, {
+                    ...options,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                
+                const data = await response.json();
+                return { success: response.ok, data, status: response.status };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+        
+        function logResult(message, type = 'info') {
+            const results = document.getElementById('testResults');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            results.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        async function testViewUser(userId) {
+            logResult(`Testando visualizzazione utente ID: ${userId}...`);
+            
+            const response = await makeRequest(`/admin/users/${userId}`);
+            
+            if (response.success) {
+                logResult(`✅ Successo! Dettagli utente caricati per ID: ${userId}`, 'success');
+                logResult(`Nome: ${response.data.first_name} ${response.data.last_name}`);
+                logResult(`Email: ${response.data.email}`);
+                logResult(`Tipo: ${response.data.user_type}`);
+            } else {
+                logResult(`❌ Errore nel caricamento dettagli utente ID: ${userId}`, 'error');
+                logResult(`Errore: ${response.error || response.data?.message}`, 'error');
+            }
+        }
+        
+        async function testToggleStatus(userId) {
+            logResult(`Testando toggle status utente ID: ${userId}...`);
+            
+            const response = await makeRequest(`/admin/users/${userId}/toggle-active`, {
+                method: 'POST'
+            });
+            
+            if (response.success) {
+                logResult(`✅ Successo! ${response.data.message}`, 'success');
+                logResult(`Nuovo stato: ${response.data.data?.is_active ? 'Attivo' : 'Inattivo'}`, 'success');
+            } else {
+                logResult(`❌ Errore nel toggle status utente ID: ${userId}`, 'error');
+                logResult(`Errore: ${response.error || response.data?.message}`, 'error');
+            }
+        }
+        
+        async function testVerifyEmail(userId) {
+            logResult(`Testando verifica email utente ID: ${userId}...`);
+            
+            const response = await makeRequest(`/admin/users/${userId}/verify-email`, {
+                method: 'POST'
+            });
+            
+            if (response.success) {
+                logResult(`✅ Successo! ${response.data.message}`, 'success');
+            } else {
+                logResult(`❌ Errore nella verifica email utente ID: ${userId}`, 'error');
+                logResult(`Errore: ${response.error || response.data?.message}`, 'error');
+            }
+        }
+        
+        // Test iniziale
+        logResult('Test inizializzato. Clicca sui pulsanti per testare le API.');
+    </script>
+</body>
+</html> 

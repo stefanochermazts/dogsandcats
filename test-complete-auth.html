@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Autenticazione Completa - DogsAndCats</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        button { padding: 10px 15px; margin: 5px; }
+        .demo-credentials { background: #e8f4fd; padding: 15px; border-radius: 4px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Autenticazione Completa</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Backend Laravel</h2>
+        <button onclick="testBackend()">Test Backend</button>
+        <div id="backend-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test Login API</h2>
+        <div class="demo-credentials">
+            <strong>Credenziali Demo:</strong><br>
+            Admin: admin@dogsandcats.com / admin123<br>
+            Proprietario: proprietario@test.com / password123<br>
+            Associazione: associazione@test.com / password123<br>
+            Volontario: volontario@test.com / password123
+        </div>
+        <button onclick="testLoginAPI()">Test Login API</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test Dashboard Complete</h2>
+        <button onclick="testDashboard()">Test Dashboard</button>
+        <div id="dashboard-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Test Token Management</h2>
+        <button onclick="checkTokens()">Check Tokens</button>
+        <div id="tokens-result"></div>
+    </div>
+
+    <script>
+        async function testBackend() {
+            const result = document.getElementById('backend-result');
+            result.innerHTML = '<p class="info">Testing backend connection...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/test');
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <p class="success">✅ Backend connection successful!</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Backend connection failed: ${error.message}</p>
+                    <p>Make sure Laravel server is running on port 8001</p>
+                `;
+            }
+        }
+        
+        async function testLoginAPI() {
+            const result = document.getElementById('login-result');
+            result.innerHTML = '<p class="info">Testing login API...</p>';
+            
+            try {
+                const loginData = {
+                    email: 'admin@dogsandcats.com',
+                    password: 'admin123'
+                };
+                
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Login API successful!</p>
+                        <p><strong>Token:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Login API failed: ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Login API error: ${error.message}</p>
+                    <p>This will fallback to demo mode</p>
+                `;
+            }
+        }
+        
+        async function testDashboard() {
+            const result = document.getElementById('dashboard-result');
+            result.innerHTML = '<p class="info">Testing dashboard access...</p>';
+            
+            try {
+                // Simula login
+                const loginData = {
+                    email: 'admin@dogsandcats.com',
+                    password: 'admin123'
+                };
+                
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Salva token
+                    localStorage.setItem('authToken', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    
+                    result.innerHTML = `
+                        <p class="success">✅ Dashboard access ready!</p>
+                        <p><strong>Token saved:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User saved:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><a href="/admin/dashboard-complete.html" target="_blank">Open Dashboard Complete</a></p>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Dashboard access failed: ${data.message}</p>
+                        <p>Will use demo mode instead</p>
+                        <p><a href="/admin/dashboard-complete.html" target="_blank">Open Dashboard (Demo Mode)</a></p>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Dashboard test error: ${error.message}</p>
+                    <p>Will use demo mode instead</p>
+                    <p><a href="/admin/dashboard-complete.html" target="_blank">Open Dashboard (Demo Mode)</a></p>
+                `;
+            }
+        }
+        
+        function checkTokens() {
+            const result = document.getElementById('tokens-result');
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            
+            result.innerHTML = `
+                <h3>Current Tokens:</h3>
+                <p><strong>authToken:</strong> ${token ? token.substring(0, 20) + '...' : 'NOT FOUND'}</p>
+                <p><strong>user:</strong></p>
+                <pre>${user ? JSON.stringify(JSON.parse(user), null, 2) : 'NOT FOUND'}</pre>
+                <button onclick="clearTokens()">Clear Tokens</button>
+            `;
+        }
+        
+        function clearTokens() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('authExpiration');
+            document.getElementById('tokens-result').innerHTML = '<p class="success">✅ Tokens cleared!</p>';
+        }
+        
+        // Auto-check tokens on load
+        window.onload = function() {
+            checkTokens();
+        };
+    </script>
+</body>
+</html> 

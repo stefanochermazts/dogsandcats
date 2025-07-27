@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login Reale vs Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        .demo { color: orange; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        button { padding: 10px 15px; margin: 5px; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Login Reale vs Demo</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Backend Connection</h2>
+        <button onclick="testBackend()">Test Backend</button>
+        <div id="backend-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test Login Reale</h2>
+        <div>
+            <input type="email" id="email" placeholder="Email" value="admin@dogsandcats.com">
+            <input type="password" id="password" placeholder="Password" value="admin123">
+            <button onclick="testRealLogin()">Test Login Reale</button>
+        </div>
+        <div id="real-login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test Login Demo</h2>
+        <button onclick="testDemoLogin()">Test Login Demo</button>
+        <div id="demo-login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Current Token Status</h2>
+        <button onclick="checkTokenStatus()">Check Token Status</button>
+        <div id="token-status"></div>
+    </div>
+
+    <script>
+        async function testBackend() {
+            const result = document.getElementById('backend-result');
+            result.innerHTML = '<p class="info">Testing backend connection...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/test');
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <p class="success">✅ Backend connection successful!</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Backend connection failed: ${error.message}</p>
+                    <p>This will cause fallback to demo mode</p>
+                `;
+            }
+        }
+        
+        async function testRealLogin() {
+            const result = document.getElementById('real-login-result');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            result.innerHTML = '<p class="info">Testing real login...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Salva token reale
+                    localStorage.setItem('authToken', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    localStorage.setItem('isDemoToken', 'false');
+                    
+                    result.innerHTML = `
+                        <p class="success">✅ Real login successful!</p>
+                        <p><strong>Token:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <p><strong>Token Type:</strong> Real (not demo)</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Real login failed: ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Real login error: ${error.message}</p>
+                    <p>This will cause fallback to demo mode</p>
+                `;
+            }
+        }
+        
+        function testDemoLogin() {
+            const result = document.getElementById('demo-login-result');
+            
+            // Simula login demo
+            const demoUser = {
+                id: 999,
+                firstName: 'Demo',
+                lastName: 'Admin',
+                email: 'demo@test.com',
+                type: 'admin',
+                userType: 'admin',
+                isActive: true,
+                emailVerified: true
+            };
+            
+            const demoToken = 'demo_token_' + Math.random().toString(36).substr(2, 9);
+            
+            // Salva token demo
+            localStorage.setItem('authToken', demoToken);
+            localStorage.setItem('user', JSON.stringify(demoUser));
+            localStorage.setItem('isDemoToken', 'true');
+            
+            result.innerHTML = `
+                <p class="demo">🔄 Demo login successful!</p>
+                <p><strong>Token:</strong> ${demoToken}</p>
+                <p><strong>User:</strong> ${demoUser.firstName} ${demoUser.lastName}</p>
+                <p><strong>Type:</strong> ${demoUser.userType}</p>
+                <p><strong>Token Type:</strong> Demo</p>
+            `;
+        }
+        
+        function checkTokenStatus() {
+            const result = document.getElementById('token-status');
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            const isDemo = localStorage.getItem('isDemoToken');
+            
+            result.innerHTML = `
+                <h3>Current Token Status:</h3>
+                <p><strong>Token:</strong> ${token ? token.substring(0, 20) + '...' : 'NOT FOUND'}</p>
+                <p><strong>Is Demo:</strong> ${isDemo === 'true' ? 'Yes' : 'No'}</p>
+                <p><strong>User:</strong></p>
+                <pre>${user ? JSON.stringify(JSON.parse(user), null, 2) : 'NOT FOUND'}</pre>
+                <button onclick="clearTokens()">Clear All Tokens</button>
+            `;
+        }
+        
+        function clearTokens() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('isDemoToken');
+            localStorage.removeItem('authExpiration');
+            document.getElementById('token-status').innerHTML = '<p class="success">✅ All tokens cleared!</p>';
+        }
+        
+        // Auto-check on load
+        window.onload = function() {
+            checkTokenStatus();
+        };
+    </script>
+</body>
+</html> 

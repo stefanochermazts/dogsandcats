@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login Finale</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Login Finale</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Backend Connection</h2>
+        <button onclick="testBackend()">Test Backend</button>
+        <div id="backend-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test Login API</h2>
+        <button onclick="testLogin()">Test Login</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test Complete Flow</h2>
+        <button onclick="testCompleteFlow()">Test Complete Flow</button>
+        <div id="complete-result"></div>
+    </div>
+
+    <script>
+        async function testBackend() {
+            const result = document.getElementById('backend-result');
+            result.innerHTML = '<p class="info">Testing backend...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/test');
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <p class="success">✅ Backend OK!</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Backend Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        async function testLogin() {
+            const result = document.getElementById('login-result');
+            result.innerHTML = '<p class="info">Testing login...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@dogsandcats.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    result.innerHTML = `
+                        <p class="success">✅ Login OK!</p>
+                        <p><strong>Token:</strong> ${data.data.token.substring(0, 20)}...</p>
+                        <p><strong>User:</strong> ${data.data.user.firstName} ${data.data.user.lastName}</p>
+                        <p><strong>Type:</strong> ${data.data.user.userType}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Login Failed: ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Login Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        async function testCompleteFlow() {
+            const result = document.getElementById('complete-result');
+            result.innerHTML = '<p class="info">Testing complete flow...</p>';
+            
+            try {
+                // 1. Login
+                const loginResponse = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@dogsandcats.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const loginData = await loginResponse.json();
+                
+                if (loginResponse.ok && loginData.success) {
+                    // 2. Salva token
+                    localStorage.setItem('authToken', loginData.data.token);
+                    localStorage.setItem('user', JSON.stringify(loginData.data.user));
+                    localStorage.setItem('isDemoToken', 'false');
+                    
+                    // 3. Test dashboard access
+                    const dashboardResponse = await fetch('http://localhost:8001/api/admin/dashboard/general', {
+                        headers: {
+                            'Authorization': `Bearer ${loginData.data.token}`,
+                            'Accept': 'application/json',
+                        }
+                    });
+                    
+                    if (dashboardResponse.ok) {
+                        const dashboardData = await dashboardResponse.json();
+                        result.innerHTML = `
+                            <p class="success">✅ Complete flow OK!</p>
+                            <p><strong>Login:</strong> Success</p>
+                            <p><strong>Dashboard Access:</strong> Success</p>
+                            <p><strong>User:</strong> ${loginData.data.user.firstName} ${loginData.data.user.lastName}</p>
+                            <p><strong>Type:</strong> ${loginData.data.user.userType}</p>
+                            <p><strong>Redirect URL:</strong> /admin/dashboard-complete.html</p>
+                            <p><a href="/admin/dashboard-complete.html" target="_blank">Open Dashboard Complete</a></p>
+                        `;
+                    } else {
+                        result.innerHTML = `
+                            <p class="error">❌ Dashboard access failed</p>
+                            <p><strong>Login:</strong> Success</p>
+                            <p><strong>Dashboard Access:</strong> Failed</p>
+                        `;
+                    }
+                } else {
+                    result.innerHTML = `
+                        <p class="error">❌ Login failed: ${loginData.message}</p>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <p class="error">❌ Complete flow error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

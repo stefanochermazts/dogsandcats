@@ -1,80 +1,102 @@
-# Analisi Funzionale - DogsAndCats
+# Analisi Funzionale - dogsandcats
 
-## 1. Panoramica del Progetto
+## 1. Introduzione
 
-### 1.1 Obiettivi del Sistema
-<!-- Descrivi gli obiettivi principali del sistema -->
+Il documento descrive in dettaglio la **Piattaforma dogsandcats**, un sistema web e mobile pensato unicamente per la gestione di **cani** e **gatti**, destinato a:
 
-### 1.2 Scope del Progetto
-<!-- Definisci cosa è incluso e cosa è escluso dal progetto -->
+* **Associazioni animaliste** (rifugi, volontari, onlus)
+* **Proprietari di pet** (cani, gatti)
 
-### 1.3 Stakeholder
-<!-- Elenca tutti gli stakeholder coinvolti -->
+Scopo: definire funzionalità, flussi utente e requisiti per la versione MVP e per le funzioni avanzate (cimitero virtuale e memoriali).
 
-## 2. Requisiti Funzionali
+## 2. Scopo e Obiettivi
 
-### 2.1 Requisiti di Alto Livello
-<!-- Elenca i requisiti principali del sistema -->
+1. Centralizzare la gestione degli animali (anagrafiche, adozioni, volontari) per rifugi e associazioni.
+2. Offrire ai proprietari un’area dedicata al proprio cane/gatto (salute, feed, ricordi, cimitero).
+3. Popolare automaticamente la sezione pubblica del sito con dati inseriti in area riservata.
+4. Garantire una piattaforma focalizzata **esclusivamente** su cani e gatti.
 
-### 2.2 Casi d'Uso
+## 3. Ambito del Sistema
 
-#### 2.2.1 Attori del Sistema
-<!-- Descrivi gli attori che interagiscono con il sistema -->
+* **Utenti registrati**: associazioni, volontari, proprietari.
+* **Area pubblica**: adozioni, memoriali, cimitero, feed.
+* **Tecnologie MVP**: React (Web/Native), Node.js (REST API), PostgreSQL, servizi di notifica.
 
-#### 2.2.2 Casi d'Uso Principali
-<!-- Documenta i casi d'uso principali -->
+### 3.1 Ambito Iniziale
 
-##### UC01: [Nome Caso d'Uso]
-- **Attore Primario**: 
-- **Precondizioni**: 
-- **Flusso Principale**: 
-  1. 
-  2. 
-  3. 
-- **Flussi Alternativi**: 
-- **Postcondizioni**: 
+* **Specie supportate**: SOLO **cani** e **gatti**.
+* **Schede Animale**: campi specifici per razza, taglia, microchip, comportamento.
+* **Salute & Benessere**: cronologia vaccini tipici (parvovirus, leishmania, etc.), trattamenti antiparassitari.
+* **Attività**: tracker delle passeggiate e tempo di gioco.
 
-## 3. Requisiti Non Funzionali
+## 4. Attori
 
-### 3.1 Performance
-<!-- Requisiti di performance -->
+| Attore               | Descrizione                                                        |
+| -------------------- | ------------------------------------------------------------------ |
+| Associazione / Admin | Gestisce anagrafiche, volontari, adozioni, cimitero.               |
+| Volontario           | Riceve incarichi, aggiorna disponibilità.                          |
+| Proprietario Pet     | Gestisce profilo pet (solo cani/gatti), salute, ricordi, cimitero. |
+| Visitatore Pubblico  | Consulta vetrina adozioni, memoriali, cimitero.                    |
+| Sistema di Notifiche | Gestisce invio push/email per promemoria e incarichi.              |
 
-### 3.2 Sicurezza
-<!-- Requisiti di sicurezza -->
+## 5. Funzionalità e Use Cases
 
-### 3.3 Usabilità
-<!-- Requisiti di usabilità -->
+Le funzionalità sono organizzate per modulo, riflettendo i flussi utente sia delle associazioni sia dei proprietari.
 
-### 3.4 Scalabilità
-<!-- Requisiti di scalabilità -->
+### 5.1 Autenticazione & Profili
 
-## 4. Vincoli e Limitazioni
+* **Registrazione/Login** (email+pwd, ruoli: associazione, volontario, proprietario).
+* **Gestione Profilo** (nome, contatti, logo/foto).
 
-### 4.1 Vincoli Tecnologici
-<!-- Descrivi i vincoli tecnologici -->
+### 5.2 Gestione Animali (Associazioni)
 
-### 4.2 Vincoli di Business
-<!-- Descrivi i vincoli di business -->
+* CRUD schede (nome, specie cani/gatti, razza, età, stato sanitario, microchip, comportamento).
+* Filtri avanzati (taglia, livello di energia, sterilizzazione).
+* Lista d’attesa per adozioni e organizzazione open-day.
 
-## 5. Modello dei Dati
+### 5.3 Piattaforma Adozioni
 
-### 5.1 Entità Principali
-<!-- Descrivi le entità principali del sistema -->
+* Vetrina pubblica con filtri (razza, taglia, età, sterilizzazione).
+* Modulo di contatto con questionario breve.
+* Sezione “Adoption Stories” con storie di successo.
 
-### 5.2 Relazioni
-<!-- Descrivi le relazioni tra le entità -->
+### 5.4 Rubrica Volontari & Workflow
 
-## 6. Interfacce Esterne
+* Elenco volontari con disponibilità e competenze.
+* Assegnazione incarichi via notifica push/email.
+* Monitoraggio formazione volontari.
 
-### 6.1 API Esterne
-<!-- Documenta le API esterne utilizzate -->
+### 5.5 Registro Salute & Promemoria (Proprietari)
 
-### 6.2 Integrazioni
-<!-- Documenta le integrazioni con sistemi esterni -->
+* CRUD voci vaccini e trattamenti per cani/gatti.
+* Calendario salute con reminder configurabili.
+* Upload referti e documenti veterinari.
+
+### 5.6 Profilo Pet & Feed Locale
+
+* Profilo individuale per cane/gatto (nickname, foto, bio, tag comportamento).
+* Feed con post, commenti, geolocalizzazione play-date.
+* Segnalazioni Lost & Found con alert georiferiti.
+
+### 5.7 Sezioni Pubbliche
+
+* **Adozioni**: elenco animali disponibile, aggiornato in real time dai dati CRM.
+* **Ricordi**: memoriali degli animali adottati, con foto e dediche.
+* **Cimitero Virtuale**: area permanente per memorial cani/gatti (foto, date vita, dedica, donazioni).
+* **Feed Aggregato**: mix di ultime adozioni, storie e memorial, con widget “Pet della settimana”.
+
+## 6. Requisiti Non-Funzionali
+
+* **Focalizzazione**: il sistema supporta **solo** cani e gatti.
+* **Sicurezza & GDPR**: crittografia dati sensibili, gestione consensi.
+* **Performance**: API ≤ 200 ms CRUD.
+* **Scalabilità**: architettura modulare.
+* **Disponibilità**: SLA ≥ 99.5%.
+* **Accessibilità**: sia il sito web (frontend) sia le API e la documentazione del backend devono essere conformi a **WCAG 2.1 AA**, garantendo markup semantico, alternative testuali, corretto uso di ARIA e header e payload accessibili.
+* **i18n**: IT/EN.
 
 ---
 
-**Documento creato il**: [Data]  
-**Ultima modifica**: [Data]  
-**Versione**: 1.0  
-**Autore**: [Nome] 
+---
+
+*Fine Analisi Funzionale dogsandcats MVP + Cimitero Virtuale*

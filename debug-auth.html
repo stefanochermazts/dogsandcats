@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Auth - DogsAndCats</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug Auth Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Login Admin</h2>
+        <button onclick="testAdminLogin()">Login Admin</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Check localStorage</h2>
+        <button onclick="checkStorage()">Check Storage</button>
+        <div id="storage-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test Admin Auth</h2>
+        <button onclick="testAdminAuth()">Test Admin Auth</button>
+        <div id="auth-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Clear Storage</h2>
+        <button onclick="clearStorage()">Clear Storage</button>
+        <div id="clear-result"></div>
+    </div>
+
+    <script>
+        async function testAdminLogin() {
+            const result = document.getElementById('login-result');
+            result.innerHTML = '<p class="info">Testing login...</p>';
+            
+            try {
+                // Simula il login usando la stessa logica del login-api.js
+                const loginData = {
+                    email: 'admin@dogsandcats.com',
+                    password: 'admin123'
+                };
+                
+                const demoCredentials = {
+                    'admin@dogsandcats.com': { type: 'admin', name: 'Admin DogsAndCats', password: 'admin123' }
+                };
+                
+                const demoUser = demoCredentials[loginData.email];
+                if (demoUser && loginData.password === demoUser.password) {
+                    const nameParts = demoUser.name.split(' ');
+                    
+                    const loginResult = {
+                        success: true,
+                        message: 'Login effettuato con successo (modalità demo)',
+                        user: {
+                            id: Math.floor(Math.random() * 1000),
+                            firstName: nameParts[0],
+                            lastName: nameParts[1] || '',
+                            email: loginData.email,
+                            type: demoUser.type,
+                            userType: demoUser.type,
+                            isActive: true,
+                            emailVerified: true
+                        },
+                        token: 'demo_token_' + Date.now()
+                    };
+                    
+                    // Salva come fa il vero login
+                    localStorage.setItem('authToken', loginResult.token);
+                    localStorage.setItem('user', JSON.stringify(loginResult.user));
+                    
+                    result.innerHTML = `
+                        <p class="success">✅ Login admin successful!</p>
+                        <pre>${JSON.stringify(loginResult, null, 2)}</pre>
+                    `;
+                } else {
+                    throw new Error('Invalid credentials');
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Login failed: ${error.message}</p>`;
+            }
+        }
+        
+        function checkStorage() {
+            const result = document.getElementById('storage-result');
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            
+            result.innerHTML = `
+                <h3>localStorage Content:</h3>
+                <p><strong>authToken:</strong> ${token || 'NOT FOUND'}</p>
+                <p><strong>user:</strong></p>
+                <pre>${user ? JSON.stringify(JSON.parse(user), null, 2) : 'NOT FOUND'}</pre>
+            `;
+        }
+        
+        async function testAdminAuth() {
+            const result = document.getElementById('auth-result');
+            result.innerHTML = '<p class="info">Testing admin auth...</p>';
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                const userStr = localStorage.getItem('user');
+                
+                if (!token) {
+                    throw new Error('No token found');
+                }
+                
+                if (!userStr) {
+                    throw new Error('No user data found');
+                }
+                
+                const localUser = JSON.parse(userStr);
+                
+                // Test the same logic as admin-auth.js
+                if (localUser.type !== 'admin') {
+                    throw new Error('User is not admin');
+                }
+                
+                if (token.startsWith('demo_token_')) {
+                    result.innerHTML = `
+                        <p class="success">✅ Admin auth successful (demo mode)!</p>
+                        <p><strong>User type:</strong> ${localUser.type}</p>
+                        <p><strong>Token type:</strong> Demo</p>
+                        <pre>${JSON.stringify(localUser, null, 2)}</pre>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <p class="info">Real token detected, would try backend...</p>
+                        <pre>${JSON.stringify(localUser, null, 2)}</pre>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Admin auth failed: ${error.message}</p>`;
+            }
+        }
+        
+        function clearStorage() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('authExpiration');
+            
+            document.getElementById('clear-result').innerHTML = 
+                '<p class="success">✅ Storage cleared!</p>';
+        }
+        
+        // Auto-check storage on load
+        window.onload = function() {
+            checkStorage();
+        };
+    </script>
+</body>
+</html> 
